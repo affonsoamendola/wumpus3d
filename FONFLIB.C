@@ -86,3 +86,18 @@ void fputi(int number, int size, FILE * file)
 		}
 	}
 }
+
+void * create_pointer_list()
+{
+	void * pointer_list_address;
+
+	pointer_list_address = malloc(2*sizeof(void*));
+
+	*(pointer_list_address + sizeof(void*)) = 0
+	 
+	return &pointer_list_address;
+}
+
+void add_object_to 
+
+
