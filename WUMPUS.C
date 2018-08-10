@@ -37,7 +37,8 @@ void main()
 	int game_running = 1;
 	char key;
 
-	float velocity = 1.0f;
+	float current_velocity = 0.0f;
+	float acceleration = 0.075f;
 
 	float movement[3];
 
@@ -49,7 +50,7 @@ void main()
 
 	while(game_running)
 	{
-		if(kbhit())
+		if(kbdown())
 		{
 			key =  getch();
 
@@ -59,24 +60,33 @@ void main()
 
 			if(key == 'w')
 			{
-				movement[cart_z] = velocity;
+				current_velocity += acceleration;
+				movement[cart_z] = current_velocity;
 				translate_camera(movement);
 			}
 			if(key == 's')
 			{
+				current_velocity += acceleration;
 				movement[cart_z] = -velocity;
 				translate_camera(movement);
 			}
 			if(key == 'a')
 			{
+				current_velocity += acceleration;
 				movement[cart_x] = -velocity;
 				translate_camera(movement); 
 			}
 			if(key == 'd')
 			{
+				current_velocity += acceleration;
 				movement[cart_x] = velocity;
 				translate_camera(movement);
 			}
+		}
+
+		if(kbup())
+		{
+			current_velocity = 0.0f;
 		}
 
 		draw_page(!get_current_frame_page());
@@ -84,7 +94,9 @@ void main()
 		fill_screen(0);
 
 		projected_coordinates = world_to_screen_coordinates(point_coordinates);
-		set_pixel((int)projected_coordinates[0]+SCREEN_WIDTH/2, (int)projected_coordinates[1]+SCREEN_HEIGHT/2, 40);
+		set_pixel(	(int)projected_coordinates[0] + SCREEN_WIDTH/2, 
+					(int)projected_coordinates[1] + SCREEN_HEIGHT/2, 
+					40	);
 
 		position = get_camera_position();
 
@@ -94,7 +106,6 @@ void main()
 		print_string(0,9,40,text_char,1);
 
 		frame_page(get_current_draw_page());
-
 	}
 		
 	free(projected_coordinates);
