@@ -86,3 +86,76 @@ void fputi(int number, int size, FILE * file)
 		}
 	}
 }
+
+
+void * create_pointer_list()
+{
+	// Pointer list format in memory:
+	// byte 1 = info of the current node, namely:
+	// least significant bit = is this node occupied, 0 = false 1 = true
+	// next bits = this node index
+	// next 4 bytes = pointer to next node
+	// last 4 bytes = pointer to object
+
+	void * pointer_list_address;
+
+	pointer_list_address = malloc(1+2*sizeof(void*));
+
+	*(pointer_list_address) = (char)0x0;
+	 
+	return &pointer_list_address;
+}
+
+void pointer_list_add(void * pointer_list, void * object)
+{
+	void * current_node;
+
+	char current_info;
+
+	current_node = pointer_list;
+	current_info = *current_node;
+
+	while((current_info & 0x1) == 1)
+	{
+		current_node = *(current_node + 1);
+		current_info = *(current_node);
+	}
+
+	*(current_node) = (char)0x1;
+	*(current_node+1+sizeof(void*)) = object;
+	*(current_node+1) = malloc(1+2*sizeof(void*));
+} 
+
+void * pointer_list_remove(void * pointer_list, int index)
+{
+	int i = 0;
+
+	void * current_node;
+
+	current_node = pointer_list;
+
+	for(i=1; i<=index; i++)
+	{
+		current_node = *(current_node+1);
+	}
+
+	*current_node = (char) 0x0;
+}
+
+void * pointer_list_access(void * pointer_list, int index)
+{
+	int i = 0;
+
+	void * current_node;
+
+	current_node = pointer_list;
+
+	for(i=1; i<=index; i++)
+	{
+		current_node = *(current_node+1);
+	}
+
+	return *(current_node + sizeof(void*) + 1);
+}
+
+
