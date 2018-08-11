@@ -106,13 +106,6 @@ void * create_pointer_list()
 	return &pointer_list_address;
 }
 
-PILOTO F
-VOLPE F
-XUXA FO
-DICK F
-DAORA FO
-FANTI F
-
 void pointer_list_add(void * pointer_list, void * object)
 {
 	void * current_node;
